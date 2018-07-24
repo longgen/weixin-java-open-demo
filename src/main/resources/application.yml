@@ -10,8 +10,8 @@ wechat:
     componentToken: ""
     componentAesKey: ""
   redis:
-    host: "127.0.0.1"
+    host: "192.168.1.233"
 server:
-  port: 80
+  port: 88
 
 
