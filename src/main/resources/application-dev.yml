@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: jdbc:p6spy:mysql://192.168.1.233:3306/opt_core?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true
+    username: root
+    password: 90()IOpl
+    initial-size: 10
+    maximum-pool-size: 300
+    max-active: 1000
+    connection-test-query: select 1
+    validation-interval: 30000
+    validation-query: select 1
+    default-read-only: true
+    test-on-borrow: true
+    test-on-return: true
+    read-only: true
+    jdbc-interceptors: org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  pid:
+    fail-on-write-error: true
+
+server:
+  port: 8088
+  tomcat:
+    accesslog:
+      enabled: true
+  error:
+    whitelabel:
+      enabled: false
+  context-path: /
+mybatis:
+  mapper-locations: classpath*:config/mybatis/mapper/*.xml
+  type-aliases-package: com.agg.wx.open.entity
+logging:
+  file: info.log
+  path: D:/
+  level: debug
+
+wechat:
+  open:
+    componentAppId: ""
+    componentSecret: ""
+    componentToken: "guruxinkeji"
+    componentAesKey: "haliluyaguruEPJBTjPvKqnCKwtnLzoodnamacityml"
+  redis:
+    host: 192.168.1.233
+    port: 6379

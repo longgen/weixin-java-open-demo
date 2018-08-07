@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    url: jdbc:mysql://10.10.246.226:3306/opt_core?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    data-source-class-name: org.mariadb.jdbc.Driver
+    username: sandwich
+    password: namacity1524
+    initial-size: 10
+    maximum-pool-size: 300
+    max-active: 1000
+    connection-test-query: select 1
+    validation-interval: 30000
+    validation-query: select 1
+    default-read-only: false
+    test-on-borrow: true
+    test-on-return: true
+    read-only: false
+    jdbc-interceptors: org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  pid:
+    fail-on-write-error: true
+server:
+  port: 9002
+  tomcat:
+    accesslog:
+      enabled: true
+  error:
+    whitelabel:
+      enabled: false
+mybatis:
+  mapper-locations: classpath*:config/mybatis/mapper/*.xml
+  type-aliases-package: com.agg.wx.open.entity
+logging:
+  file: wx3party.log
+  path: /webs/log/tomcat/
+  level:
+      org.springframework.web: DEBUG
+      com.agg.wx.open: DEBUG
+
+wechat:
+  open:
+    componentAppId: "wxc3348776830b036b"
+    componentSecret: "3dd1af3a40691238deaf93c33a8d8e8e"
+    componentToken: "guruxinkeji"
+    componentAesKey: "haliluyaguruEPJBTjPvKqnCKwtnLzoodnamacityml"
+  redis:
+    host: 10.10.122.48
+    port: 6379

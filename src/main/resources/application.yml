@@ -1,17 +1,8 @@
-logging:
-  level:
-    org.springframework.web: DEBUG
-    com.github.binarywang.demo.wx.open: DEBUG
-
-wechat:
-  open:
-    componentAppId: ""
-    componentSecret: ""
-    componentToken: ""
-    componentAesKey: ""
-  redis:
-    host: "192.168.1.233"
-server:
-  port: 88
+spring:
+  profiles:
+    active: pro
+endpoints:
+  jmx:
+    unique-names: true
 
 

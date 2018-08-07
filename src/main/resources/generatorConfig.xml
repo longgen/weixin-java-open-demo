@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <context id="context1" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 去除自动生成的注释 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.1.233:3306/opt_core?useUnicode=true&amp;characterEncoding=UTF-8"
+                        userId="root"
+                        password="90()IOpl"/>
+        <javaModelGenerator targetPackage="com.agg.wx.open.entity" targetProject="src/main/java/"/>
+        <sqlMapGenerator targetPackage="config.mybatis.mapper" targetProject="src/main/resources"/>
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.agg.wx.open.mapper" targetProject="src/main/java"/>
+
+       <!--<table tableName="opt_direct_mail_info" domainObjectName="OptDirectMailInfo"></table>-->
+          <!--<table tableName="opt_meta_order_zy" domainObjectName="OptMetaOrderZy"></table>-->
+        <!--<table tableName="opt_hs_code_cate" domainObjectName="OptHsCodeCate"></table>-->
+
+        <!--<table tableName="locations" domainObjectName="Locations"></table>-->
+        <!--<table tableName="opt_hz_direct_status" domainObjectName="OptHzDirectStatus"></table>-->
+          <!--<table tableName="opt_meta_order" domainObjectName="OptMetaOrder"></table>-->
+        <!--table tableName="opt_meta_commodity" domainObjectName="OptMetaCommodity"></table>-->
+        <table tableName="opt_amazon_order_log" domainObjectName="OptAmazonOrderLog"></table>
+    </context>
+</generatorConfiguration>
