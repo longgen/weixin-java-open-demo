@@ -1,15 +1,17 @@
 package com.agg.wx.open.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaCodeService;
-import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.bean.WxMaDomainAction;
 import cn.binarywang.wx.miniapp.bean.code.*;
 import cn.binarywang.wx.miniapp.util.json.WxMaGsonBuilder;
+import com.agg.wx.open.config.WxaDomainProperties;
 import com.agg.wx.open.service.WxOpenService;
 import com.google.gson.JsonObject;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.open.bean.WxOpenMaCodeTemplate;
 import me.chanjar.weixin.open.bean.result.WxOpenAuthorizerInfoResult;
 import me.chanjar.weixin.open.bean.result.WxOpenQueryAuthResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * @author <a href="https://github.com/007gzs">007</a>
@@ -36,11 +35,17 @@ public class WechatApiController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private WxOpenService wxOpenService;
+    @Autowired
+    private WxaDomainProperties wxaDomainProperties;
+
+
     @GetMapping("/auth/goto_auth_url_show")
     @ResponseBody
     public String gotoPreAuthUrlShow(){
+
         return "<a href='goto_auth_url'>go</a>";
     }
+
     @GetMapping("/auth/goto_auth_url")
     public void gotoPreAuthUrl(HttpServletRequest request, HttpServletResponse response){
         String host = request.getHeader("host");
@@ -53,12 +58,18 @@ public class WechatApiController {
             throw new RuntimeException(e);
         }
     }
+
+
     @GetMapping("/auth/jump")
     @ResponseBody
     public WxOpenQueryAuthResult jump(@RequestParam("auth_code") String authorizationCode){
         try {
             WxOpenQueryAuthResult queryAuthResult = wxOpenService.getWxOpenComponentService().getQueryAuth(authorizationCode);
             logger.info("getQueryAuth", queryAuthResult);
+            String appid = queryAuthResult.getAuthorizationInfo().getAuthorizerAppid();
+            if(StringUtils.isNotBlank( appid )){
+                modifyDomain( appid,"set" );
+            }
             return queryAuthResult;
         } catch (WxErrorException e) {
             logger.error("gotoPreAuthUrl", e);
@@ -128,6 +139,39 @@ public class WechatApiController {
         }
     }
 
+    @GetMapping("/modifyDomain")
+    @ResponseBody
+    public WxMaDomainAction modifyDomain(@RequestParam String appId,@RequestParam String action){
+        //设置小程序服务器域名
+        try {
+            WxMaDomainAction domainAction = WxMaDomainAction.builder().action( action )
+                    .requestDomain( wxaDomainProperties.getRequest() )
+                    .downloadDomain( wxaDomainProperties.getDownload() )
+                    .uploadDomain( wxaDomainProperties.getUpload() )
+                    .wsRequestDomain( wxaDomainProperties.getWs() )
+                    .build();
+            return wxOpenService.getWxOpenComponentService().getWxMaServiceByAppid( appId ).getSettingService().modifyDomain( domainAction );
+        } catch (WxErrorException e) {
+            logger.error("modifyDomain", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/setWebViewDomain")
+    @ResponseBody
+    public WxMaDomainAction setWebViewDomain(@RequestParam String appId,@RequestParam String action){
+        //设置小程序服务器域名
+        try {
+            WxMaDomainAction domainAction = WxMaDomainAction.builder().action( action )
+                    .webViewDomain( wxaDomainProperties.getWebview() )
+                    .build();
+            return wxOpenService.getWxOpenComponentService().getWxMaServiceByAppid( appId ).getSettingService().setWebViewDomain( domainAction );
+        } catch (WxErrorException e) {
+            logger.error("setWebViewDomain", e);
+            throw new RuntimeException(e);
+        }
+    }
+
     @GetMapping("/commit")
     @ResponseBody
     public String commit(@RequestParam String appId,@RequestParam String cid,@RequestParam Long templateId){
@@ -150,11 +194,15 @@ public class WechatApiController {
     }
 
     @GetMapping("/getQrCode")
-    @ResponseBody
-    public byte[] getQrCode(@RequestParam String appId){
+    public void getQrCode(@RequestParam String appId,HttpServletResponse resp){
         //获取体验小程序的体验二维码
         try {
-            return wxOpenService.getWxOpenComponentService().getWxMaServiceByAppid( appId ).getCodeService().getQrCode();
+            OutputStream stream = resp.getOutputStream();
+            stream.write(wxOpenService.getWxOpenComponentService().getWxMaServiceByAppid( appId ).getCodeService().getQrCode());
+            stream.flush();
+            stream.close();
+        } catch (IOException e){
+            logger.error("getQrCode", e);
         } catch (WxErrorException e) {
             logger.error("getQrCode", e);
             throw new RuntimeException(e);
@@ -163,7 +211,7 @@ public class WechatApiController {
 
     @GetMapping("/submitAudit")
     @ResponseBody
-    public long submitAudit(@RequestParam String appId){
+    public long submitAudit(@RequestParam String appId,@RequestParam String tag,@RequestParam String title){
         //将第三方提交的代码包提交审核（仅供第三方开发者代小程序调用），返回：审核编号
         try {
             WxMaCodeService service = wxOpenService.getWxOpenComponentService().getWxMaServiceByAppid( appId ).getCodeService();
@@ -171,6 +219,8 @@ public class WechatApiController {
             List<String> pageList = service.getPage();
             WxMaCategory category = categoryList.get( 0 );
             category.setAddress( pageList.get( 0 ) );
+            category.setTag(tag);
+            category.setTitle( title );
             List<WxMaCategory> itemList = new ArrayList<>(  );
             itemList.add( category );
             WxMaCodeSubmitAuditRequest request =  WxMaCodeSubmitAuditRequest.builder()
@@ -199,6 +249,7 @@ public class WechatApiController {
     @ResponseBody
     public WxMaCodeAuditStatus getLatestAuditStatus(@RequestParam String appId){
         //查询最新一次提交的审核状态（仅供第三方代小程序调用）
+        //{"auditId":466607965,"status":2}	审核状态，其中0为审核成功，1为审核失败，2为审核中
         try {
             WxMaCodeService service = wxOpenService.getWxOpenComponentService().getWxMaServiceByAppid( appId ).getCodeService();
             return service.getLatestAuditStatus();
@@ -296,7 +347,7 @@ public class WechatApiController {
 
     @GetMapping("/memberauth")
     @ResponseBody
-    public String memberauth(@RequestParam String appId,@RequestParam String wechatId){
+    public String memberauth(@RequestParam String appId){
         //获取体验者列表
         try {
             Map<String, Object> param = new HashMap<>(1);

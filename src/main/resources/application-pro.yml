@@ -46,3 +46,9 @@ wechat:
   redis:
     host: 10.10.122.48
     port: 6379
+  domain:
+    request: ["https://wxapi.ajyaguru.com","https://wxapi2.ajyaguru.com"]
+    upload: ["https://osicp3qqw.bkt.clouddn.com"]
+    download: ["https://osicp3qqw.bkt.clouddn.com"]
+    ws: []
+    webview: ["https://m.miaoquanqiu.com"]

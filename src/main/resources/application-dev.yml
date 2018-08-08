@@ -38,10 +38,16 @@ logging:
 
 wechat:
   open:
-    componentAppId: ""
-    componentSecret: ""
+    componentAppId: "wxc3348776830b036b"
+    componentSecret: "3dd1af3a40691238deaf93c33a8d8e8e"
     componentToken: "guruxinkeji"
     componentAesKey: "haliluyaguruEPJBTjPvKqnCKwtnLzoodnamacityml"
   redis:
     host: 192.168.1.233
     port: 6379
+  domain:
+    request: ["https://wxapi.ajyaguru.com","https://wxapi2.ajyaguru.com"]
+    upload: ["https://osicp3qqw.bkt.clouddn.com"]
+    download: ["https://osicp3qqw.bkt.clouddn.com"]
+    ws: []
+    webview: ["https://m.miaoquanqiu.com"]

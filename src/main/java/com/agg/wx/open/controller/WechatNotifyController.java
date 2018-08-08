@@ -103,6 +103,7 @@ public class WechatNotifyController {
             WxMpXmlOutMessage outMessage = wxOpenService.getWxOpenMessageRouter().route(inMessage, appId);
             if(outMessage != null){
                 out = WxOpenXmlMessage.wxMpOutXmlMessageToEncryptedXml(outMessage, wxOpenService.getWxOpenConfigStorage());
+                this.logger.debug("\n组装回复appId:{},信息：{}",appId, out);
             }
         }
         return out;
