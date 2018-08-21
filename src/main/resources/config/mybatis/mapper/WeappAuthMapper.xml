@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agg.wx.open.mapper.WeappAuthMapper">
+  <resultMap id="BaseResultMap" type="com.agg.wx.open.entity.WeappAuth">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="principal_name" jdbcType="VARCHAR" property="principalName" />
+    <result column="qrcode_url" jdbcType="VARCHAR" property="qrcodeUrl" />
+    <result column="signature" jdbcType="VARCHAR" property="signature" />
+    <result column="mini_program_info" jdbcType="VARCHAR" property="miniProgramInfo" />
+    <result column="cid" jdbcType="VARCHAR" property="cid" />
+    <result column="refresh_token" jdbcType="VARCHAR" property="refreshToken" />
+    <result column="access_token" jdbcType="VARCHAR" property="accessToken" />
+    <result column="func_info" jdbcType="VARCHAR" property="funcInfo" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, app_id, nick_name, user_name, principal_name, qrcode_url, signature, mini_program_info, 
+    cid, refresh_token, access_token, func_info, created, updated
+  </sql>
+  <select id="selectByExample" parameterType="com.agg.wx.open.entity.WeappAuthExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from third_weapp_auth
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from third_weapp_auth
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from third_weapp_auth
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.agg.wx.open.entity.WeappAuthExample">
+    delete from third_weapp_auth
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.agg.wx.open.entity.WeappAuth">
+    insert into third_weapp_auth (id, app_id, nick_name, 
+      user_name, principal_name, qrcode_url, 
+      signature, mini_program_info, cid, 
+      refresh_token, access_token, func_info, 
+      created, updated)
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{principalName,jdbcType=VARCHAR}, #{qrcodeUrl,jdbcType=VARCHAR}, 
+      #{signature,jdbcType=VARCHAR}, #{miniProgramInfo,jdbcType=VARCHAR}, #{cid,jdbcType=VARCHAR}, 
+      #{refreshToken,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR}, #{funcInfo,jdbcType=VARCHAR}, 
+      #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.agg.wx.open.entity.WeappAuth">
+    insert into third_weapp_auth
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="principalName != null">
+        principal_name,
+      </if>
+      <if test="qrcodeUrl != null">
+        qrcode_url,
+      </if>
+      <if test="signature != null">
+        signature,
+      </if>
+      <if test="miniProgramInfo != null">
+        mini_program_info,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="refreshToken != null">
+        refresh_token,
+      </if>
+      <if test="accessToken != null">
+        access_token,
+      </if>
+      <if test="funcInfo != null">
+        func_info,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="updated != null">
+        updated,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="principalName != null">
+        #{principalName,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeUrl != null">
+        #{qrcodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="signature != null">
+        #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="miniProgramInfo != null">
+        #{miniProgramInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="refreshToken != null">
+        #{refreshToken,jdbcType=VARCHAR},
+      </if>
+      <if test="accessToken != null">
+        #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="funcInfo != null">
+        #{funcInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null">
+        #{updated,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.agg.wx.open.entity.WeappAuthExample" resultType="java.lang.Long">
+    select count(*) from third_weapp_auth
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update third_weapp_auth
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nickName != null">
+        nick_name = #{record.nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.principalName != null">
+        principal_name = #{record.principalName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qrcodeUrl != null">
+        qrcode_url = #{record.qrcodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.signature != null">
+        signature = #{record.signature,jdbcType=VARCHAR},
+      </if>
+      <if test="record.miniProgramInfo != null">
+        mini_program_info = #{record.miniProgramInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cid != null">
+        cid = #{record.cid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refreshToken != null">
+        refresh_token = #{record.refreshToken,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accessToken != null">
+        access_token = #{record.accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="record.funcInfo != null">
+        func_info = #{record.funcInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updated != null">
+        updated = #{record.updated,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update third_weapp_auth
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      nick_name = #{record.nickName,jdbcType=VARCHAR},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      principal_name = #{record.principalName,jdbcType=VARCHAR},
+      qrcode_url = #{record.qrcodeUrl,jdbcType=VARCHAR},
+      signature = #{record.signature,jdbcType=VARCHAR},
+      mini_program_info = #{record.miniProgramInfo,jdbcType=VARCHAR},
+      cid = #{record.cid,jdbcType=VARCHAR},
+      refresh_token = #{record.refreshToken,jdbcType=VARCHAR},
+      access_token = #{record.accessToken,jdbcType=VARCHAR},
+      func_info = #{record.funcInfo,jdbcType=VARCHAR},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      updated = #{record.updated,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.agg.wx.open.entity.WeappAuth">
+    update third_weapp_auth
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="principalName != null">
+        principal_name = #{principalName,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeUrl != null">
+        qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="signature != null">
+        signature = #{signature,jdbcType=VARCHAR},
+      </if>
+      <if test="miniProgramInfo != null">
+        mini_program_info = #{miniProgramInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        cid = #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="refreshToken != null">
+        refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      </if>
+      <if test="accessToken != null">
+        access_token = #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="funcInfo != null">
+        func_info = #{funcInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null">
+        updated = #{updated,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.agg.wx.open.entity.WeappAuth">
+    update third_weapp_auth
+    set app_id = #{appId,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      principal_name = #{principalName,jdbcType=VARCHAR},
+      qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR},
+      signature = #{signature,jdbcType=VARCHAR},
+      mini_program_info = #{miniProgramInfo,jdbcType=VARCHAR},
+      cid = #{cid,jdbcType=VARCHAR},
+      refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      access_token = #{accessToken,jdbcType=VARCHAR},
+      func_info = #{funcInfo,jdbcType=VARCHAR},
+      created = #{created,jdbcType=TIMESTAMP},
+      updated = #{updated,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

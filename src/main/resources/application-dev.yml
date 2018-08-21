@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:p6spy:mysql://192.168.1.233:3306/opt_core?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true
+    url: jdbc:p6spy:mysql://192.168.1.161:3306/jiangzi_service?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true
     username: root
-    password: 90()IOpl
+    password: root
     initial-size: 10
     maximum-pool-size: 300
     max-active: 1000
@@ -15,7 +15,6 @@ spring:
     read-only: true
     jdbc-interceptors: org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer
     driver-class-name: org.mariadb.jdbc.Driver
-
   pid:
     fail-on-write-error: true
 

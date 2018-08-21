@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agg.wx.open.mapper.WeappAuditMapper">
+  <resultMap id="BaseResultMap" type="com.agg.wx.open.entity.WeappAudit">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="auditid" jdbcType="BIGINT" property="auditid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="templateId" jdbcType="BIGINT" property="templateid" />
+    <result column="cid" jdbcType="VARCHAR" property="cid" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="dev_version" jdbcType="VARCHAR" property="devVersion" />
+    <result column="dev_desc" jdbcType="VARCHAR" property="devDesc" />
+    <result column="dev_time" jdbcType="TIMESTAMP" property="devTime" />
+    <result column="audit_version" jdbcType="VARCHAR" property="auditVersion" />
+    <result column="audit_desc" jdbcType="VARCHAR" property="auditDesc" />
+    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
+    <result column="prod_version" jdbcType="VARCHAR" property="prodVersion" />
+    <result column="prod_desc" jdbcType="VARCHAR" property="prodDesc" />
+    <result column="prod_time" jdbcType="TIMESTAMP" property="prodTime" />
+    <result column="last_code_json" jdbcType="VARCHAR" property="lastCodeJson" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, app_id, auditid, status, templateId, cid, tag, title, reason, dev_version, dev_desc, 
+    dev_time, audit_version, audit_desc, audit_time, prod_version, prod_desc, prod_time, 
+    last_code_json, remark, created, updated
+  </sql>
+  <select id="selectByExample" parameterType="com.agg.wx.open.entity.WeappAuditExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from third_weapp_audit
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from third_weapp_audit
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from third_weapp_audit
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.agg.wx.open.entity.WeappAuditExample">
+    delete from third_weapp_audit
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.agg.wx.open.entity.WeappAudit">
+    insert into third_weapp_audit (id, app_id, auditid, 
+      status, templateId, cid, 
+      tag, title, reason, 
+      dev_version, dev_desc, dev_time, 
+      audit_version, audit_desc, audit_time, 
+      prod_version, prod_desc, prod_time, 
+      last_code_json, remark, created, 
+      updated)
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=VARCHAR}, #{auditid,jdbcType=BIGINT}, 
+      #{status,jdbcType=INTEGER}, #{templateid,jdbcType=BIGINT}, #{cid,jdbcType=VARCHAR}, 
+      #{tag,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, 
+      #{devVersion,jdbcType=VARCHAR}, #{devDesc,jdbcType=VARCHAR}, #{devTime,jdbcType=TIMESTAMP}, 
+      #{auditVersion,jdbcType=VARCHAR}, #{auditDesc,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, 
+      #{prodVersion,jdbcType=VARCHAR}, #{prodDesc,jdbcType=VARCHAR}, #{prodTime,jdbcType=TIMESTAMP}, 
+      #{lastCodeJson,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
+      #{updated,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.agg.wx.open.entity.WeappAudit">
+    insert into third_weapp_audit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="auditid != null">
+        auditid,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="templateid != null">
+        templateId,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="devVersion != null">
+        dev_version,
+      </if>
+      <if test="devDesc != null">
+        dev_desc,
+      </if>
+      <if test="devTime != null">
+        dev_time,
+      </if>
+      <if test="auditVersion != null">
+        audit_version,
+      </if>
+      <if test="auditDesc != null">
+        audit_desc,
+      </if>
+      <if test="auditTime != null">
+        audit_time,
+      </if>
+      <if test="prodVersion != null">
+        prod_version,
+      </if>
+      <if test="prodDesc != null">
+        prod_desc,
+      </if>
+      <if test="prodTime != null">
+        prod_time,
+      </if>
+      <if test="lastCodeJson != null">
+        last_code_json,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="updated != null">
+        updated,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditid != null">
+        #{auditid,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="templateid != null">
+        #{templateid,jdbcType=BIGINT},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="devVersion != null">
+        #{devVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="devDesc != null">
+        #{devDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="devTime != null">
+        #{devTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditVersion != null">
+        #{auditVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDesc != null">
+        #{auditDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prodVersion != null">
+        #{prodVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="prodDesc != null">
+        #{prodDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="prodTime != null">
+        #{prodTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastCodeJson != null">
+        #{lastCodeJson,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null">
+        #{updated,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.agg.wx.open.entity.WeappAuditExample" resultType="java.lang.Long">
+    select count(*) from third_weapp_audit
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update third_weapp_audit
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appId != null">
+        app_id = #{record.appId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditid != null">
+        auditid = #{record.auditid,jdbcType=BIGINT},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.templateid != null">
+        templateId = #{record.templateid,jdbcType=BIGINT},
+      </if>
+      <if test="record.cid != null">
+        cid = #{record.cid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tag != null">
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reason != null">
+        reason = #{record.reason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.devVersion != null">
+        dev_version = #{record.devVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.devDesc != null">
+        dev_desc = #{record.devDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.devTime != null">
+        dev_time = #{record.devTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.auditVersion != null">
+        audit_version = #{record.auditVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditDesc != null">
+        audit_desc = #{record.auditDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditTime != null">
+        audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.prodVersion != null">
+        prod_version = #{record.prodVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prodDesc != null">
+        prod_desc = #{record.prodDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prodTime != null">
+        prod_time = #{record.prodTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastCodeJson != null">
+        last_code_json = #{record.lastCodeJson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updated != null">
+        updated = #{record.updated,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update third_weapp_audit
+    set id = #{record.id,jdbcType=BIGINT},
+      app_id = #{record.appId,jdbcType=VARCHAR},
+      auditid = #{record.auditid,jdbcType=BIGINT},
+      status = #{record.status,jdbcType=INTEGER},
+      templateId = #{record.templateid,jdbcType=BIGINT},
+      cid = #{record.cid,jdbcType=VARCHAR},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      reason = #{record.reason,jdbcType=VARCHAR},
+      dev_version = #{record.devVersion,jdbcType=VARCHAR},
+      dev_desc = #{record.devDesc,jdbcType=VARCHAR},
+      dev_time = #{record.devTime,jdbcType=TIMESTAMP},
+      audit_version = #{record.auditVersion,jdbcType=VARCHAR},
+      audit_desc = #{record.auditDesc,jdbcType=VARCHAR},
+      audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      prod_version = #{record.prodVersion,jdbcType=VARCHAR},
+      prod_desc = #{record.prodDesc,jdbcType=VARCHAR},
+      prod_time = #{record.prodTime,jdbcType=TIMESTAMP},
+      last_code_json = #{record.lastCodeJson,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      updated = #{record.updated,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.agg.wx.open.entity.WeappAudit">
+    update third_weapp_audit
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditid != null">
+        auditid = #{auditid,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="templateid != null">
+        templateId = #{templateid,jdbcType=BIGINT},
+      </if>
+      <if test="cid != null">
+        cid = #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="devVersion != null">
+        dev_version = #{devVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="devDesc != null">
+        dev_desc = #{devDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="devTime != null">
+        dev_time = #{devTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditVersion != null">
+        audit_version = #{auditVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDesc != null">
+        audit_desc = #{auditDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prodVersion != null">
+        prod_version = #{prodVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="prodDesc != null">
+        prod_desc = #{prodDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="prodTime != null">
+        prod_time = #{prodTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastCodeJson != null">
+        last_code_json = #{lastCodeJson,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null">
+        updated = #{updated,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.agg.wx.open.entity.WeappAudit">
+    update third_weapp_audit
+    set app_id = #{appId,jdbcType=VARCHAR},
+      auditid = #{auditid,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      templateId = #{templateid,jdbcType=BIGINT},
+      cid = #{cid,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      dev_version = #{devVersion,jdbcType=VARCHAR},
+      dev_desc = #{devDesc,jdbcType=VARCHAR},
+      dev_time = #{devTime,jdbcType=TIMESTAMP},
+      audit_version = #{auditVersion,jdbcType=VARCHAR},
+      audit_desc = #{auditDesc,jdbcType=VARCHAR},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      prod_version = #{prodVersion,jdbcType=VARCHAR},
+      prod_desc = #{prodDesc,jdbcType=VARCHAR},
+      prod_time = #{prodTime,jdbcType=TIMESTAMP},
+      last_code_json = #{lastCodeJson,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      created = #{created,jdbcType=TIMESTAMP},
+      updated = #{updated,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

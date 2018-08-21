@@ -1,5 +1,8 @@
 package com.agg.wx.open.controller;
 
+import com.agg.wx.open.entity.WeappAudit;
+import com.agg.wx.open.entity.WeappAuditExample;
+import com.agg.wx.open.mapper.WeappAuditMapper;
 import com.agg.wx.open.service.WxOpenService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.bean.kefu.WxMpKefuMessage;
@@ -12,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author <a href="https://github.com/007gzs">007</a>
  */
@@ -21,6 +27,9 @@ public class WechatNotifyController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     protected WxOpenService wxOpenService;
+
+    @Autowired
+    private WeappAuditMapper weappAuditMapper;
 
     @RequestMapping("/receive_ticket")
     public Object receiveTicket(@RequestBody(required = false) String requestBody, @RequestParam("timestamp") String timestamp,
@@ -100,6 +109,33 @@ public class WechatNotifyController {
                 logger.error("callback", e);
             }
         }else{
+            Date created = new Date( inMessage.getCreateTime()*1000 );
+            if (StringUtils.equalsIgnoreCase(inMessage.getEvent(), "weapp_audit_success")){
+                //代码审核成功，修改状态
+                WeappAuditExample example = new WeappAuditExample();
+                example.or().andAppIdEqualTo( appId );
+                List<WeappAudit> records = weappAuditMapper.selectByExample( example );
+                if(records.size()>0){
+                    WeappAudit record = records.get( 0 );
+                    record.setStatus( 0 );
+                    record.setAuditTime( created );
+                    record.setUpdated( created );
+                    weappAuditMapper.updateByPrimaryKey( record);
+                }
+            }else if (StringUtils.equalsIgnoreCase(inMessage.getEvent(), "weapp_audit_success")){
+                //审核失败，记录原因
+                WeappAuditExample example = new WeappAuditExample();
+                example.or().andAppIdEqualTo( appId );
+                List<WeappAudit> records = weappAuditMapper.selectByExample( example );
+                if(records.size()>0){
+                    WeappAudit record = records.get( 0 );
+                    record.setStatus( 1 );
+                    record.setReason( inMessage.getFailReason() );
+                    record.setAuditTime( created );
+                    record.setUpdated( created );
+                    weappAuditMapper.updateByPrimaryKey( record);
+                }
+            }
             WxMpXmlOutMessage outMessage = wxOpenService.getWxOpenMessageRouter().route(inMessage, appId);
             if(outMessage != null){
                 out = WxOpenXmlMessage.wxMpOutXmlMessageToEncryptedXml(outMessage, wxOpenService.getWxOpenConfigStorage());
