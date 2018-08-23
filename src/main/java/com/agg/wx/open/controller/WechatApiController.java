@@ -13,11 +13,8 @@ import com.agg.wx.open.entity.WeappAuthExample;
 import com.agg.wx.open.mapper.WeappAuditMapper;
 import com.agg.wx.open.mapper.WeappAuthMapper;
 import com.agg.wx.open.service.WxOpenService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.open.api.WxOpenComponentService;
 import me.chanjar.weixin.open.api.WxOpenConfigStorage;
 import me.chanjar.weixin.open.bean.WxOpenMaCodeTemplate;
 import me.chanjar.weixin.open.bean.result.WxOpenAuthorizerInfoResult;
@@ -134,6 +131,23 @@ public class WechatApiController {
         }
     }
 
+    @GetMapping("/getAuthList")
+    @ResponseBody
+    public List<WeappAuth> getAuthList(@RequestParam(required = false) String appId){
+        //获取所有的授权小程序列表
+        WeappAuthExample example = new WeappAuthExample();
+        if (StringUtils.isNotBlank( appId )){
+            example.or().andAppIdEqualTo( appId );
+        }
+        try {
+            return weappAuthMapper.selectByExample( example );
+        } catch (Exception e) {
+            logger.error("getTemplateList", e);
+            return null;
+        }
+    }
+
+
     @GetMapping("/getTemplateList")
     @ResponseBody
     public List<WxOpenMaCodeTemplate> getTemplateList(){
@@ -220,39 +234,40 @@ public class WechatApiController {
 
     @GetMapping("/commit")
     @ResponseBody
-    public String commit(@RequestParam String appId,@RequestParam String cid,
-                         @RequestParam String user_version,
-                         @RequestParam String user_desc,
-                         @RequestParam Long templateId){
+    public String commit(@RequestParam String appId,
+                         @RequestParam Long templateId,
+                         @RequestParam(required = false,defaultValue = "1175") String cid,
+                         @RequestParam(required = false) String user_version,
+                         @RequestParam(required = false) String user_desc
+                         ){
         //为授权的小程序帐号上传小程序代码
         try {
+            List<WxOpenMaCodeTemplate> templateList = getTemplateList();
+            WxOpenMaCodeTemplate template = templateList.parallelStream().filter( t -> t.getTemplateId().equals( templateId ) ).findFirst().get();
+            String version = template.getUserVersion();
+            String desc = template.getUserDesc();
+            if (StringUtils.isNotBlank( user_version )){
+                version = user_version;
+            }
+            if (StringUtils.isNotBlank( user_desc )){
+                desc = user_desc;
+            }
             Map<String,String> ext = new HashMap<>(  );
             ext.put( "cid",cid );
-//            JsonObject ext = new JsonObject();
-//            ext.addProperty( "cid",cid );
+            ext.put( "user_version",version );
+            ext.put( "user_desc",desc );
+            ext.put( "templateId",""+templateId );
             WxMaCodeExtConfig extConfig = WxMaCodeExtConfig.builder()
                     .extEnable( true )
                     .extAppid( appId )
                     .ext( ext )
                     .build();
-//            JsonObject extConfig = new JsonObject();
-//            extConfig.addProperty( "extEnable",true  );
-//            extConfig.addProperty( "extAppid",appId  );
-//            extConfig.addProperty( "ext",ext.toString()  );
             WxMaCodeCommitRequest commitRequest = WxMaCodeCommitRequest.builder()
                     .templateId( templateId )
                     .extConfig( extConfig )
                     .userVersion( user_version )
                     .userDesc( user_desc )
                     .build();
-//            JsonObject commitRequest = new JsonObject();
-//            commitRequest.addProperty( "template_id",templateId  );
-//            commitRequest.addProperty( "ext_json",extConfig.toString()  );
-//            commitRequest.addProperty( "user_version",user_version  );
-//            commitRequest.addProperty( "user_desc",user_desc  );
-//            String postData = new Gson().toJson(commitRequest);
-//            String postData = commitRequest.toString();
-//            String postData = "{\"extEnable\": true,\"extAppid\": \"wx0fcfc3188293fa40\",\"ext\": {\"title\": \"wechat\",\"cid\": \"112905\"}}";
             String lastCodeJson = commitRequest.toJson();
             logger.info( "commitRequest:"+ lastCodeJson );
             getWxMaService(appId).getCodeService().commit( commitRequest );

@@ -10,14 +10,14 @@
     </parent>
     <groupId>com.agg.wx3open</groupId>
     <artifactId>wx3party</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
     <packaging>jar</packaging>
 
     <name>spring-boot-for-wx3open</name>
     <description>Spring Boot Demo with wechat Open</description>
 
     <properties>
-        <weixin-java-open.version>3.1.0</weixin-java-open.version>
+        <weixin-java-open.version>3.1.1</weixin-java-open.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
